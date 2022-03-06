@@ -1,7 +1,5 @@
-package com.edcm.backend.infrastructure.github;
+package com.edcm.backend.infrastructure.domain.github;
 
-import com.edcm.backend.infrastructure.domain.github.GithubCommodityItem;
-import com.edcm.backend.infrastructure.domain.github.GithubCommodityResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.MapType;

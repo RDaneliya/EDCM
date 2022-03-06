@@ -1,10 +1,13 @@
 package com.edcm.backend.core.services.station;
 
 import com.edcm.backend.infrastructure.domain.database.entities.Station;
+import com.edcm.backend.infrastructure.domain.database.projections.StationBasicInfo;
 import com.edcm.backend.infrastructure.domain.database.repositories.StationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -32,5 +35,10 @@ public class StationTransactionServiceImpl implements StationTransactionService 
     @Modifying
     public Station saveStation(Station station) {
         return stationRepository.saveAndFlush(station);
+    }
+
+    @Override
+    public List<StationBasicInfo> findByNameStartsWith(String stationName) {
+        return stationRepository.findDistinctByNameStartsWithIgnoreCaseOrderByNameAsc(stationName);
     }
 }

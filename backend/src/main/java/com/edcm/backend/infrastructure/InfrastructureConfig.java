@@ -2,9 +2,9 @@ package com.edcm.backend.infrastructure;
 
 import com.edcm.backend.core.mappers.CommodityMapper;
 import com.edcm.backend.core.tools.GithubDataProvider;
-import com.edcm.backend.infrastructure.github.DefaultGithubDataProvider;
-import com.edcm.backend.infrastructure.github.DefaultGithubOperations;
-import com.edcm.backend.infrastructure.github.GithubOperations;
+import com.edcm.backend.infrastructure.domain.github.DefaultGithubDataProvider;
+import com.edcm.backend.infrastructure.domain.github.DefaultGithubOperations;
+import com.edcm.backend.infrastructure.domain.github.GithubOperations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;

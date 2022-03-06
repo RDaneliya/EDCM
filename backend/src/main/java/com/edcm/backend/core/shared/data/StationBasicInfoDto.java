@@ -9,8 +9,9 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CommodityOverviewDto implements Serializable {
-    private Long commodityId;
-    private Long minBuyPrice;
-    private Long maxSellPrice;
+public class StationBasicInfoDto implements Serializable {
+    private Long id;
+    private String name;
+    private String systemName;
+    private Long systemId;
 }

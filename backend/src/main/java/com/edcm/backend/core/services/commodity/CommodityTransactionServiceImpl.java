@@ -1,7 +1,7 @@
 package com.edcm.backend.core.services.commodity;
 
+import com.edcm.backend.core.mappers.CommodityMapper;
 import com.edcm.backend.core.services.category.CategoryTransactionService;
-import com.edcm.backend.core.shared.data.CommodityOverviewDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
 import com.edcm.backend.infrastructure.domain.database.projections.CommodityOverview;
 import com.edcm.backend.infrastructure.domain.database.repositories.CommodityRepository;
@@ -18,6 +18,7 @@ import java.util.List;
 public class CommodityTransactionServiceImpl implements CommodityTransactionService {
     private final CommodityRepository repository;
     private final CategoryTransactionService categoryTransactionService;
+    private final CommodityMapper mapper;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)

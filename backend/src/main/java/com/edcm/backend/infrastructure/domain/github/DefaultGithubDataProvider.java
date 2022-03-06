@@ -1,9 +1,8 @@
-package com.edcm.backend.infrastructure.github;
+package com.edcm.backend.infrastructure.domain.github;
 
 import com.edcm.backend.core.mappers.CommodityMapper;
 import com.edcm.backend.core.shared.data.CommodityDto;
 import com.edcm.backend.core.tools.GithubDataProvider;
-import com.edcm.backend.infrastructure.domain.github.GithubCommodityItemWithEddn;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

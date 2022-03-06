@@ -12,6 +12,7 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
@@ -35,7 +36,7 @@ public class ZeromqMessageHandler implements MessageHandler {
             String outputString = new String(output, 0, outputLength, StandardCharsets.UTF_8);
             MessageSchema schemaType = getSchema(outputString);
 
-            switch (schemaType) {
+            switch (Objects.requireNonNull(schemaType)) {
                 case COMMODITY -> {
                     try {
                         ZeromqCommodityPayload outfittingPayload = objectMapper.readValue(
@@ -61,7 +62,7 @@ public class ZeromqMessageHandler implements MessageHandler {
                 .replace("\"", "")
                 .trim();
             return MessageSchema.valueOfSchema(schemaString);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalStateException e) {
             log.error("Seems there is a new schema: " + e);
             return null;
         }
