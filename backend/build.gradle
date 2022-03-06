@@ -1,0 +1,72 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.4'
+    id "org.flywaydb.flyway" version "8.0.0"
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'org.hibernate.orm'
+}
+
+group = 'com.edcm'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    maven { url 'https://repo.spring.io/release' }
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:2.6.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.4'
+    implementation 'org.springframework.boot:spring-boot-starter-integration:2.6.4'
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.4'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:2.6.4'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.4'
+    implementation 'org.springframework.integration:spring-integration-http:5.5.9'
+    implementation 'org.springframework.integration:spring-integration-jpa:5.5.9'
+    implementation 'org.springframework.integration:spring-integration-zeromq:5.5.9'
+    implementation 'org.postgresql:postgresql:42.3.3'
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    implementation 'org.jetbrains:annotations:22.0.0'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools:2.6.4'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.6.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.4'
+    testImplementation 'org.springframework.integration:spring-integration-test:5.5.9'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+hibernate {
+    enhance {
+        enableLazyInitialization = true
+        enableDirtyTracking = true
+        enableAssociationManagement = true
+        enableExtendedEnhancement = false
+    }
+}
+
+bootJar {
+    archiveFileName = 'edcm-backend.jar'
+}
+
+flyway {
+    url = System.getenv('DB_URL')
+    user = System.getenv('DB_USER')
+    password = System.getenv('DB_PASSWORD')
+    schemas = ['public']
+    createSchemas = false
+    sqlMigrationSuffixes = ['.sql']
+}

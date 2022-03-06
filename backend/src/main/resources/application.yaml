@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+  devtools:
+    livereload:
+      enabled: true
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/postgres
+    user: postgres
+    password: postgres
+    schemas: public
+    create-schemas: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+    open-in-view: false
+    show-sql: false
+management:
+  server:
+    port: 8080
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+    enabled-by-default: true
+logging:
+  level:
+    com.edcm: DEBUG
+github-commodities-url: https://raw.githubusercontent.com/RemainNA/cargo-manifest/main/items.json
+zeromq:
+  eddn-channel-url: tcp://eddn.edcd.io:9500:9500
+  timeout: 600000
+scheduled:
+  github:
+    cron: "0 0 */12 * * ?"
+  eddn:
+    cron:
