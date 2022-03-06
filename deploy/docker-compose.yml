@@ -1,0 +1,58 @@
+version: '3.9'
+
+x-logging-rules: &logging-rules
+  logging:
+    driver: "json-file"
+    options:
+      max-size: 20m
+      max-file: "10"
+
+services:
+  database:
+    image: postgres:14.2-bullseye
+    env_file:
+      - env/db.env
+    volumes:
+      - edcm-postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    container_name: database
+    restart: unless-stopped
+
+  flyway:
+    image: flyway/flyway:8.5.2-alpine
+    env_file:
+      - env/flyway.env
+    command:
+      - -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    volumes:
+      - /../backend/src/main/resources/db/migration/:/flyway/sql
+      - ./flyway.config:/flyway/conf/flyway.config
+    depends_on:
+      - database
+
+  backend:
+    build:
+      context: ../backend/
+      dockerfile: Dockerfile
+    env_file:
+      - env/backend.env
+    depends_on:
+      database:
+        condition: service_started
+      flyway:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    container_name: backend
+    restart: unless-stopped
+
+networks:
+  backend:
+
+volumes:
+  edcm-postgres-data:
