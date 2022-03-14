@@ -32,13 +32,14 @@ public interface CommodityRepository extends JpaRepository<Commodity, Long> {
             min(stationCommodity.buyPrice) as minBuyPrice,
             max (stationCommodity.sellPrice) as maxSellPrice,
             commodity.id as commodityId,
-            commodity.name as commodityName
+            commodity.name as commodityName,
+            commodity.category.name as commodityCategory
         FROM StationCommodity stationCommodity
         JOIN Commodity commodity on stationCommodity.commodity = commodity
         JOIN Station station on stationCommodity.station = station
         JOIN station.economies economy
         WHERE economy.economyName.name <> 'Carrier' and stationCommodity.buyPrice > 0
-        GROUP BY commodityName, commodityId
+        GROUP BY commodityName, commodityId, commodityCategory
         """)
     List<CommodityOverview> getOverview();
 

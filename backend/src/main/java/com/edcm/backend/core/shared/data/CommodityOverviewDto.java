@@ -11,6 +11,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class CommodityOverviewDto implements Serializable {
     private Long commodityId;
+    private String commodityName;
+    private String commodityCategory;
     private Long minBuyPrice;
     private Long maxSellPrice;
 }

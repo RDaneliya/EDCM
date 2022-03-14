@@ -10,4 +10,6 @@ public interface CommodityOverview {
 
     String getCommodityName();
 
+    String getCommodityCategory();
+
 }
