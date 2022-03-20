@@ -34,6 +34,8 @@ dependencies {
     implementation 'org.postgresql:postgresql:42.3.3'
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
     implementation 'org.jetbrains:annotations:22.0.0'
+    implementation 'io.swagger.core.v3:swagger-annotations:2.1.13'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
 
     compileOnly 'org.projectlombok:lombok:1.18.22'
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.6.4'
