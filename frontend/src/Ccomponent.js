@@ -9,9 +9,13 @@ export default class Ccomponent extends Component {
             items: []
         };
     }
+
     //.drinks | {mode: 'no-cors'})
     componentDidMount() {
-        fetch("http://localhost:8080/api/commodities/overview",{mode: 'no-cors'})  // http://localhost:8080/api/commodities/overview | https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail
+        fetch("http://localhost:8080/api/commodities/overview", {
+            mode: 'cors',
+            headers: {'Access-Control-Allow-Origin': '*'}
+        })  // http://localhost:8080/api/commodities/overview | https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=Cocktail
             .then(res => res.json())
             .then(
                 (result) => {
