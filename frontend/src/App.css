@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  font-size: 30px;
+  color: white;
 }
 
 .App-logo {
@@ -14,19 +16,81 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #0275d8;
+  min-height: 7vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  text-align: center;
+  vertical-align: middle;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
   color: white;
+  padding: 0 20px;
+  box-shadow: 0px 3px 10px grey;
 }
 
 .App-link {
   color: #61dafb;
 }
+
+.mainblock{
+  align-items: center;
+  display: flex;
+  vertical-align: middle;
+  justify-content: space-between;
+  margin: 0 10%;
+  height: 93vh;
+}
+
+block {
+  width:420px;
+  height:190px;
+  background-color: blue;
+  border-radius: 7px;
+  box-shadow: 0px 3px 10px grey;
+}
+
+block :hover {
+  cursor: pointer;
+}
+
+header > div > a {
+  padding: 0px 5px 5px 20px;
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+}
+
+.blue_block{
+  background-color: #321fdb;
+}
+
+.yellow_block{
+  background-color: #ffc107;
+}
+
+.gray_block{
+  background-color: #29363d;
+}
+
+h3{
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0;
+  text-align: left;
+  padding: 20px;
+  padding-bottom: 0;
+}
+
+p{
+  margin: 0;
+  text-align: left;
+  padding: 20px;
+  line-height: 20px;
+  font-size: 18px;
+}
+
+
 
 @keyframes App-logo-spin {
   from {
