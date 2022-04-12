@@ -18,4 +18,6 @@ public interface CommodityTransactionService {
     boolean isExistByEddnName(String eddnName);
 
     List<CommodityOverview> getOverview();
+
+    CommodityOverview getSpecificOverview(String commodityName);
 }

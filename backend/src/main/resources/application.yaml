@@ -41,5 +41,3 @@ zeromq:
 scheduled:
   github:
     cron: "0 0 */12 * * ?"
-  eddn:
-    cron:
