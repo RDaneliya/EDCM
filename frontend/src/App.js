@@ -1,13 +1,7 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Commodities from "./Commodities";
-import {
-    Router,
-    Routes,
-    Route,
-    Link,
-} from 'react-router-dom';
+import {Link, Route, Routes,} from 'react-router-dom';
 
 export const App = () => (
     <div className="App">
