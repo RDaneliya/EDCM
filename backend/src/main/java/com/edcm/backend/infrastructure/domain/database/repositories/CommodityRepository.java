@@ -5,6 +5,7 @@ import com.edcm.backend.infrastructure.domain.database.entities.CommodityCategor
 import com.edcm.backend.infrastructure.domain.database.projections.CommodityOverview;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
@@ -41,6 +42,22 @@ public interface CommodityRepository extends JpaRepository<Commodity, Long> {
         GROUP BY commodityName, commodityId
         """)
     List<CommodityOverview> getOverview();
+
+    @Query(value = """
+        SELECT
+            min(stationCommodity.buyPrice) as minBuyPrice,
+            max (stationCommodity.sellPrice) as maxSellPrice,
+            commodity.id as commodityId,
+            commodity.name as commodityName
+        FROM StationCommodity stationCommodity
+        JOIN Commodity commodity on stationCommodity.commodity = commodity
+        JOIN Station station on stationCommodity.station = station
+        JOIN station.economies economy
+        WHERE economy.economyName.name <> 'Carrier'
+        and stationCommodity.commodity.name = :name
+        GROUP BY commodityName, commodityId
+        """)
+    CommodityOverview getOverviewByName(@Param("name") String name);
 
     boolean existsByName(String name);
 

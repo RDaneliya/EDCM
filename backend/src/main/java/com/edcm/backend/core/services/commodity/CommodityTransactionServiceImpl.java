@@ -50,4 +50,9 @@ public class CommodityTransactionServiceImpl implements CommodityTransactionServ
     public List<CommodityOverview> getOverview() {
         return repository.getOverview();
     }
+
+    @Override
+    public CommodityOverview getSpecificOverview(String commodityName) {
+        return repository.getOverviewByName(commodityName);
+    }
 }
