@@ -1,28 +1,56 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import Ccomponent from "./Ccomponent";
+import Commodities from "./Commodities";
+import {Link, Route, Routes,} from 'react-router-dom';
 
-function App() {
-
-  return (
+export const App = () => (
     <div className="App">
-      <Ccomponent/>
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>sdfsd</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+        <header className="App-header">
+            <Link to="/" >Elite: Dangerous Commodity Monitoring</Link>
+            <div>
+                <Link to="/API" >API</Link>
+                <Link to="/Bot" >Bot</Link>
+                <Link to="/Help" >Help</Link>
+            </div>
+        </header>
+
+        <main>
+            <Routes>
+                <Route path='/' element={<Home/>} />
+                <Route path='/API' element={<API/>} />
+                <Route path='/Bot' element={<Bot/>} />
+                <Route path='/Help' element={<Help/>} />
+                <Route path='/Commodities' element={<Commodities/>} />
+            </Routes>
+        </main>
     </div>
-  );
+);
+
+function Home() {
+    return (
+        <div className="mainblock">
+            <Link to="/Stations" className="blue_block">
+                <h3>Stations</h3>
+                <p>Browse the universe! Jump to any stations or search
+                    by many properties. You can even find the ship you
+                    wanna buy!</p>
+            </Link>
+            <Link to="/Commodities" className="yellow_block">
+                <h3>Commodities</h3>
+                <p>Browse commodities, compare and sort by numbers and
+                    go into detail to find out who sells or buys the best!</p>
+            </Link>
+            <Link to="/Find_Commodity" className="gray_block">
+                <h3>Find Commodity</h3>
+                <p>Mission problems? Can't find a station that sells you
+                    that stuff? Then the Commodity Finder is what you need!</p>
+            </Link>
+        </div>
+    );
 }
 
-export default App;
+const API = () => <h2>API</h2>;
+
+const Bot = () => <h2>Bot</h2>;
+
+const Help = () => <h2>Help</h2>;
