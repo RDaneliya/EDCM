@@ -29,11 +29,4 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
-      with:
-        gradle-version: "current"
-        arguments: test
-    - uses: actions/upload-artifact@v3
-      with:
-        name: Package
-        path: build/libs
+      run: ./gradlew test
