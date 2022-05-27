@@ -5,16 +5,19 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const db  = require('./db')
 var app = express();
+const scheduler = require('node-schedule')
+
 require('dotenv').config()
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+const { Telegraf,  Scenes, session} = require('telegraf')
 
-db.query("SELECT table_name FROM information_schema.tables\n" +
-    "WHERE table_schema NOT IN ('information_schema','pg_catalog');", (err,res)=>{
-  console.log(err,res)
-})
+const bot = new Telegraf(process.env.BOT_TOKEN)
+bot.use(require('./composers/start.composer'))
+const stage = new Scenes.Stage([require('./scenes/commodity.scene')(bot)])
+bot.use(session())
+bot.use(stage.middleware())
+bot.command('/launch',  ctx =>ctx.scene.enter('timer'))
 
+bot.launch()
 
 
 // error handler
@@ -28,4 +31,5 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-module.exports = app;
+
+module.exports = {app};
