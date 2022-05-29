@@ -16,10 +16,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "station", indexes = {
-    @Index(name = "idx_stationentity_system_unq", columnList = "system, name", unique = true),
     @Index(name = "idx_stationentity_name", columnList = "name")
 })
-
 @Getter
 @Setter
 @ToString
