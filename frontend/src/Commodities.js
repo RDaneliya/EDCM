@@ -11,25 +11,27 @@ export default class Commodities extends Component {
     }
 
     componentDidMount() {
-        fetch("http://localhost:8080/api/commodities/overview", {
-            mode: 'cors',
-            headers: {'Access-Control-Allow-Origin': '*'}
-        })
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        items: result
-                    });
-                },
-                (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
-                }
-            )
+        this.timer = setInterval(()=> {
+            fetch("http://localhost:8080/api/commodities/overview", {
+                mode: 'cors',
+                headers: {'Access-Control-Allow-Origin': '*'}
+            })
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                        this.setState({
+                            isLoaded: true,
+                            items: result
+                        });
+                    },
+                    (error) => {
+                        this.setState({
+                            isLoaded: true,
+                            error
+                        });
+                    }
+                )
+        },1000)
     }
 
     render() {
