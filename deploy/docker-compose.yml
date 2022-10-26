@@ -51,22 +51,6 @@ services:
     container_name: backend
     restart: unless-stopped
 
-#  frontend:
-#    build:
-#      context: ../frontend
-#      dockerfile: Dockerfile
-#    depends_on:
-#      backend:
-#        condition: service_started
-#    env_file:
-#      - env/frontend.env
-#    ports:
-#      - "80:80"
-#    networks:
-#      - backend
-#    container_name: frontend
-#    restart: unless-stopped
-
 networks:
   backend:
 

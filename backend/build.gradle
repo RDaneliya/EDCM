@@ -64,6 +64,13 @@ bootJar {
     archiveFileName = 'edcm-backend.jar'
 }
 
+if (hasProperty('buildScan')) {
+    buildScan {
+        termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+        termsOfServiceAgree = 'yes'
+    }
+}
+
 flyway {
     url = System.getenv('DB_URL')
     user = System.getenv('DB_USER')
