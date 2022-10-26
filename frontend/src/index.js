@@ -1,14 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import {App} from './App';
+import { App } from './App';
 import reportWebVitals from './reportWebVitals';
-import {BrowserRouter} from "react-router-dom";
+import { CssBaseline } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { amber, green } from '@mui/material/colors';
+
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: amber[900],
+    },
+    secondary: {
+      main: green[500],
+    },
+  },
+})
 
 ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App />
+    </ThemeProvider>,
   document.getElementById('root')
 );
 
