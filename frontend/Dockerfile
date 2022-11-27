@@ -1,17 +1,17 @@
-FROM node:16.14.2-bullseye-slim AS builder
+FROM node:19.1.0-alpine AS builder
 WORKDIR /usr/src/app
-RUN groupadd --gid 1111 nodeuser \
-  && useradd --home-dir /home/nodeuser --create-home --uid 1111 \
-  --gid 1111 --shell /bin/sh --skel /dev/null nodeuser
+USER root
+RUN adduser -h /home/nodeuser -u 1111 -D nodeuser
+USER nodeuser
 COPY --chown=nodeuser:nodeuser . ./
 RUN npm install && npm run build
 
 FROM nginxinc/nginx-unprivileged:1.21.6-alpine
-RUN groupadd --gid 1111 nodeuser \
-  && useradd --home-dir /home/nodeuser --create-home --uid 1111 \
-  --gid 1111 --shell /bin/sh --skel /dev/null nodeuser
+WORKDIR /usr/src/app/
+USER root
+RUN rm -rf /usr/share/nginx/html/* \
+    && adduser -h /home/nodeuser -u 1111 -D nodeuser
 COPY --chown=nodeuser:nodeuser --from=builder /usr/src/app/build /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 8080
 USER nodeuser
-CMD ["npm", "start"]
 CMD exec nginx -g "daemon off;"
