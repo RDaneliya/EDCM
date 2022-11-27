@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes, } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './components/Home';
 
-export const App = () => {
+const App = () => {
     return (
         <>
             <BrowserRouter>
@@ -17,3 +17,5 @@ export const App = () => {
             </BrowserRouter>
         </>)
 };
+
+export default App
