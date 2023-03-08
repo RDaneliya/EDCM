@@ -10,9 +10,9 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = "spring")
 public interface SystemMapper {
-    System systemDtoToSystem(SystemDto systemDto);
+    System toEntity(SystemDto systemDto);
 
-    SystemDto systemToSystemDto(System system);
+    SystemDto toDto(System system);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateSystemFromSystemDto(SystemDto systemDto, @MappingTarget System system);

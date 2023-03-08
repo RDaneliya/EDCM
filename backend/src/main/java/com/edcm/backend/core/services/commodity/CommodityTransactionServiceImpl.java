@@ -1,9 +1,8 @@
 package com.edcm.backend.core.services.commodity;
 
 import com.edcm.backend.core.services.category.CategoryTransactionService;
-import com.edcm.backend.core.shared.data.CommodityOverviewDto;
+import com.edcm.backend.core.shared.data.CommodityCategoryDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
-import com.edcm.backend.infrastructure.domain.database.projections.CommodityOverview;
 import com.edcm.backend.infrastructure.domain.database.repositories.CommodityRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class CommodityTransactionServiceImpl implements CommodityTransactionServ
         if (repository.existsByEddnName(eddnName)) {
             return repository.getCommodityEntitiesByEddnName(eddnName);
         } else {
-            var category = categoryTransactionService.createOrFindCategory("Unknown");
+            var category = categoryTransactionService.createOrFind(new CommodityCategoryDto());
             return repository.saveAndFlush(new Commodity(eddnName, eddnName, category));
         }
     }
@@ -35,10 +34,15 @@ public class CommodityTransactionServiceImpl implements CommodityTransactionServ
         return repository.save(commodity);
     }
 
+    @Override
+    public List<Commodity> saveAll(Collection<Commodity> commodities) {
+        return repository.saveAll(commodities);
+    }
+
     @Transactional(propagation = Propagation.MANDATORY)
     @Override
     public List<Commodity> findAllByEddnName(Collection<String> commodityNames) {
-        return repository.findDistinctByEddnNameInIgnoreCase(commodityNames);
+        return repository.findByEddnNameInIgnoreCase(commodityNames);
     }
 
     @Override
@@ -46,13 +50,4 @@ public class CommodityTransactionServiceImpl implements CommodityTransactionServ
         return repository.existsByEddnName(eddnName);
     }
 
-    @Override
-    public List<CommodityOverview> getOverview() {
-        return repository.getOverview();
-    }
-
-    @Override
-    public CommodityOverview getSpecificOverview(String commodityName) {
-        return repository.getOverviewByName(commodityName);
-    }
 }

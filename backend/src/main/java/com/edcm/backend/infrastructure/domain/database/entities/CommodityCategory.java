@@ -1,5 +1,11 @@
 package com.edcm.backend.infrastructure.domain.database.entities;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,26 +14,17 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import java.util.Objects;
 
 
 @Entity
-@Table(name = "commodity_category", indexes = {
-    @Index(name = "idx_commoditycategory_name_unq", columnList = "name", unique = true)
-})
+@Table(name = "commodity_category")
 @Getter
 @Setter
 @ToString
+@Immutable
 @NoArgsConstructor
 @AllArgsConstructor
-@Immutable
 public class CommodityCategory {
 
     @Id

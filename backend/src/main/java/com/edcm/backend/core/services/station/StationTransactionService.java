@@ -1,11 +1,10 @@
 package com.edcm.backend.core.services.station;
 
-import com.edcm.backend.infrastructure.domain.database.entities.Station;
+import com.edcm.backend.core.shared.data.StationDto;
 
 public interface StationTransactionService {
-    Station createOrFindStation(String name, String systemName);
 
-    Station createOfFindCarrier(String code);
+    StationDto createOrFindCarrier(String code);
 
-    Station saveStation(Station station);
+    StationDto saveStation(StationDto station);
 }

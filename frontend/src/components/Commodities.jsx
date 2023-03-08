@@ -55,7 +55,7 @@ export default class Commodities extends Component {
             }
             this.setState({ ...this.state, currentSort: sortBuyUp, currentSortId: 4 })
             this.update()
-            return;
+
         }
 
         const handleSell = () => {
@@ -69,7 +69,7 @@ export default class Commodities extends Component {
             }
             this.setState({ ...this.state, currentSort: sortSellUp, currentSortId: 2 })
             this.update()
-            return;
+
         }
 
         const handleProfit = () => {
@@ -83,7 +83,7 @@ export default class Commodities extends Component {
             }
             this.setState({ ...this.state, currentSort: sortProfitUp, currentSortId: 0 })
             this.update()
-            return;
+
         }
 
         if (error) {

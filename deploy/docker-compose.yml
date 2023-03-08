@@ -1,37 +1,38 @@
 version: '3.9'
 
-x-logging-rules: &logging-rules
-  logging:
-    driver: "json-file"
-    options:
-      max-size: 20m
-      max-file: "10"
-
 services:
   database:
-    image: postgres:14.2-bullseye
+    image: postgres:15.2-alpine3.17
     env_file:
       - env/db.env
     volumes:
       - edcm-postgres-data:/var/lib/postgresql/data
+      - .:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
       - backend
     container_name: database
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   flyway:
-    image: flyway/flyway:8.5.2-alpine
+    image: flyway/flyway:9.15.2-alpine
     env_file:
       - env/flyway.env
-    command:
-      - -configFiles=/flyway/conf/flyway.config -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+    command: -url=jdbc:postgresql://database:5432/edcm -schemas=public -user=admin -password=admin -connectRetries=60 migrate
     volumes:
-      - /../backend/src/main/resources/db/migration/:/flyway/sql
+      - ../backend/src/main/resources/db/migration:/flyway/sql
       - ./flyway.config:/flyway/conf/flyway.config
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+    networks:
+      - backend
 
   backend:
     build:
@@ -41,7 +42,7 @@ services:
       - env/backend.env
     depends_on:
       database:
-        condition: service_started
+        condition: service_healthy
       flyway:
         condition: service_completed_successfully
     ports:
