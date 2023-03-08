@@ -18,4 +18,4 @@ USER edcm-backend
 WORKDIR ${APP_ROOT}
 COPY --chown=edcm-backend:edcm-backend --from=builder /source/build/libs/edcm-backend.jar ./
 EXPOSE 8080
-CMD ["java" , "-server", "-Xmx1G", "-Xms512m", "-XX:ParallelGCThreads", "-jar", "edcm-backend.jar"]
+CMD ["java" , "-server", "-Xmx1G", "-Xms512m", "-XX:+UseParallelGC", "-jar", "edcm-backend.jar"]
