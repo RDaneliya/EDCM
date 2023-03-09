@@ -67,6 +67,6 @@ public class FactionsServiceImpl implements FactionsService {
                            .collect(Collectors.toList());
 
 
-        factions.forEach(factionRepository::save);
+        factionRepository.saveAll(factions);
     }
 }

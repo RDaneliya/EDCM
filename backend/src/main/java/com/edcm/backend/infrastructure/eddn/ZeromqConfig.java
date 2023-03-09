@@ -34,18 +34,16 @@ public class ZeromqConfig {
     }
 
     @Bean
-    @DependsOn(value = {"channelWatcher", "commodityCheckService", "factionsCheckService"})
+    @DependsOn(value = {"channelWatcher", "commodityCheckService"})
     @ServiceActivator(inputChannel = "zeroMqChannel")
     public MessageHandler messageService(
             ObjectMapper objectMapper,
             EddnStationCommoditiesService eddnStationCommoditiesService,
             ChannelWatcher channelWatcher,
-            CommodityCheckService commodityCheckService,
-            EddbCheckService eddbCheckService
+            CommodityCheckService commodityCheckService
     ) {
 
         commodityCheckService.updateCommodities();
-        eddbCheckService.updateFactions();
 
         return new ZeromqMessageHandler(objectMapper, eddnStationCommoditiesService, channelWatcher);
     }
