@@ -28,6 +28,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,21 +54,18 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
         System system = systemRepository.findByName(content.getSystemName())
                                         .orElseGet(() -> new System(null, content.getSystemName(), null));
 
-        Station station = stationRepository
-                .findByNameAndSystem_Name(content.getStationName(), content.getSystemName())
-                .map(stationEntity -> {
-                    stationCommodityRepository.deleteAll(stationEntity.getCommodities());
-                    return stationEntity;
-                })
-                .orElseGet(() -> new Station(
-                        content.getMarketId(),
-                        content.getStationName(),
-                        system
-                ));
+        Optional<Station> stationOptional;
 
-        if(station.isCarrier()){
-            stationRepository.deleteAll(stationRepository.getByName(station.getName()));
+        if (content.getStationName().matches("([A-Z0-9]){3}-([A-Z0-9]){3}")) {
+            stationOptional = stationRepository.findByName(content.getStationName());
+        } else {
+            stationOptional = stationRepository.findByNameAndSystem_Name(
+                    content.getStationName(),
+                    content.getSystemName()
+            );
         }
+
+        Station station = unboxStation(stationOptional, system, content);
 
         if (!CollectionUtils.isEmpty(content.getCommodities())) {
             initCommodities(content, station);
@@ -108,8 +106,8 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
                                                      .collect(Collectors.toSet());
             zeromqEconomies.removeAll(persistingNames);
             var newEntities = zeromqEconomies.stream()
-                           .map(name -> new Economy(null, name))
-                           .collect(Collectors.toSet());
+                                             .map(name -> new Economy(null, name))
+                                             .collect(Collectors.toSet());
             newEntities = new HashSet<>(economyRepository.saveAll(newEntities));
             station.getEconomies().addAll(newEntities);
         }
@@ -180,5 +178,18 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
             stationCommodities.addAll(newStationCommodities);
         }
         station.addCommodities(stationCommodities);
+    }
+
+    private Station unboxStation(Optional<Station> optionalStation, System system, CommodityContent content) {
+        return optionalStation
+                .map(stationEntity -> {
+                    stationCommodityRepository.deleteAll(stationEntity.getCommodities());
+                    return stationEntity;
+                })
+                .orElseGet(() -> new Station(
+                        content.getMarketId(),
+                        content.getStationName(),
+                        system
+                ));
     }
 }
