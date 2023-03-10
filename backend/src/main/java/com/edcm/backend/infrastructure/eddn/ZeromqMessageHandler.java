@@ -40,7 +40,7 @@ public class ZeromqMessageHandler implements MessageHandler {
             String outputString = new String(output, 0, outputLength, StandardCharsets.UTF_8);
             MessageSchema schemaType = getSchema(outputString);
 
-            if (Objects.requireNonNull(schemaType) == MessageSchema.COMMODITY) {
+            if (schemaType != null) {
                 processCommodityData(outputString);
             }
         } catch (DataFormatException | JsonProcessingException e) {
