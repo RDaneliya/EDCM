@@ -11,7 +11,7 @@ public enum MessageSchema {
     CODEX_ENTRY("https://eddn.edcd.io/schemas/codexentry/1"),
     COMMODITY("https://eddn.edcd.io/schemas/commodity/3"),
     FC_MATERIALS("https://eddn.edcd.io/schemas/fcmaterials_capi/1"),
-    FC_MATERIALS_JOURNAL("https://eddn.edcd.io/schemas/fcmaterials_journal/1\n"),
+    FC_MATERIALS_JOURNAL("https://eddn.edcd.io/schemas/fcmaterials_journal/1"),
     FSS_ALL_BODIES_FOUND("https://eddn.edcd.io/schemas/fssallbodiesfound/1"),
     FSS_DISCOVERY_SCAN("https://eddn.edcd.io/schemas/fssdiscoveryscan/1"),
     FSS_SIGNAL_DISCOVERED("https://eddn.edcd.io/schemas/fsssignaldiscovered/1"),
