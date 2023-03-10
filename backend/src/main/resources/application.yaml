@@ -16,6 +16,13 @@ spring:
     generate-ddl: true
     open-in-view: false
     show-sql: false
+  flyway:
+    enabled: ${FLYWAY_ENABLED}
+    url: jdbc:postgresql://localhost:5432/postgres
+    user: postgres
+    password: postgres
+    schemas: public
+    create-schemas: true
 management:
   server:
     port: 8080
