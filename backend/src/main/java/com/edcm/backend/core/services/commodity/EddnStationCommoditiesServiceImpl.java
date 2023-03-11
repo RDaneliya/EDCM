@@ -1,5 +1,7 @@
 package com.edcm.backend.core.services.commodity;
 
+import com.edcm.backend.core.shared.data.CommodityCategoryDto;
+import com.edcm.backend.core.shared.data.CommodityDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
 import com.edcm.backend.infrastructure.domain.database.entities.CommodityCategory;
 import com.edcm.backend.infrastructure.domain.database.entities.Economy;
@@ -39,9 +41,8 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
     private final StationCommodityRepository stationCommodityRepository;
     private final StationRepository stationRepository;
     private final EconomyRepository economyRepository;
-    private final CommodityCategoryRepository commodityCategoryRepository;
-    private final CommodityRepository commodityRepository;
     private final SystemRepository systemRepository;
+    private final CommodityTransactionService commodityTransactionService;
 
     @Override
     @Transactional(
@@ -76,7 +77,7 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
         }
 
         saveStation(station);
-        log.debug("Saved station: {}, system: {}", station.getName(), station.getSystem().getName());
+        log.info("Saved station: {}, system: {}", station.getName(), station.getSystem().getName());
     }
 
     private Station saveStation(Station station) {
@@ -114,69 +115,35 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
     }
 
     private void initCommodities(CommodityContent content, Station station) {
-        List<String> zeroMQCommodities = content.getCommodities().stream()
-                                                .map(EddnCommodity::getEddnName)
-                                                .toList();
-        Map<String, EddnCommodity> zeroMQCommodityMap = content
+        List<CommodityDto> commodityDtos = content
                 .getCommodities()
                 .stream()
-                .collect(Collectors.toMap(EddnCommodity::getEddnName, item -> item));
+                .map(item -> new CommodityDto(null, item.getEddnName(), item.getEddnName(), null))
+                .toList();
 
-        List<Commodity> commodityEntity = commodityRepository
-                .findAllByEddnNameIn(zeroMQCommodities);
-
-        List<StationCommodity> stationCommodities = new java.util.ArrayList<>(commodityRepository
-                .findAllByEddnNameIn(zeroMQCommodities)
+        Map<String, Commodity> commodityMap = commodityTransactionService
+                .saveAll(commodityDtos)
                 .stream()
-                .map(commodity -> {
-                    var zmqCommodity = zeroMQCommodityMap.get(commodity.getEddnName());
-                    return StationCommodity.builder()
-                                           .station(station)
-                                           .commodity(commodity)
-                                           .stock(zmqCommodity.getStock())
-                                           .demand(zmqCommodity.getDemand())
-                                           .buyPrice(zmqCommodity.getBuyPrice())
-                                           .sellPrice(zmqCommodity.getSellPrice())
-                                           .build();
+                .collect(Collectors.toMap(Commodity::getEddnName, item -> item));
 
+
+        List<StationCommodity> stationCommodities = content
+                .getCommodities()
+                .stream()
+                .map(item -> {
+                    var commodity = commodityMap.get(item.getEddnName());
+                    return new StationCommodity(
+                            null,
+                            station,
+                            commodity,
+                            item.getStock(),
+                            item.getDemand(),
+                            item.getBuyPrice(),
+                            item.getSellPrice()
+                    );
                 })
-                .toList());
+                .toList();
 
-        if (commodityEntity.size() < zeroMQCommodities.size()) {
-            Set<String> persistingCommodities = commodityEntity
-                    .stream()
-                    .map(Commodity::getEddnName)
-                    .collect(Collectors.toSet());
-
-
-            Set<String> newCommodities = new HashSet<>(zeroMQCommodities);
-
-            newCommodities.removeAll(persistingCommodities);
-            List<StationCommodity> newStationCommodities = newCommodities
-                    .stream()
-                    .map(item -> {
-                        var mapItem = zeroMQCommodityMap.get(item);
-                        CommodityCategory commodityCategory = commodityCategoryRepository
-                                .findCommodityCategoryEntityByName(mapItem.getEddnName())
-                                .orElse(commodityCategoryRepository.UNKNOWN);
-                        Commodity commodity = new Commodity(
-                                mapItem.getEddnName(),
-                                mapItem.getEddnName(),
-                                commodityCategory
-                        );
-                        return StationCommodity.builder()
-                                               .station(station)
-                                               .commodity(commodity)
-                                               .stock(mapItem.getStock())
-                                               .demand(mapItem.getDemand())
-                                               .buyPrice(mapItem.getBuyPrice())
-                                               .sellPrice(mapItem.getSellPrice())
-                                               .build();
-                    })
-                    .toList();
-
-            stationCommodities.addAll(newStationCommodities);
-        }
         station.addCommodities(stationCommodities);
     }
 
@@ -184,6 +151,7 @@ public class EddnStationCommoditiesServiceImpl implements EddnStationCommodities
         return optionalStation
                 .map(stationEntity -> {
                     stationCommodityRepository.deleteAll(stationEntity.getCommodities());
+
                     return stationEntity;
                 })
                 .orElseGet(() -> new Station(

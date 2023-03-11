@@ -26,7 +26,7 @@ public class EddbCheckService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateFactions() {
-        log.debug("Checking factions updates");
+        log.info("Checking factions updates");
 
         List<FactionDto> factionsInfo = eddbDataProvider
                 .getFactions()

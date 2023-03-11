@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class GithubCommodityResponse {
-    private Map<String, GithubCommodityItem> items;
+    private List<GithubCommodityItem> items;
 }

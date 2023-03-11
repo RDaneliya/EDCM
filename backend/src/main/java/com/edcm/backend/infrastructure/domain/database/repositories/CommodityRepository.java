@@ -17,9 +17,6 @@ public interface CommodityRepository extends JpaRepository<Commodity, Long> {
 
     Commodity getCommodityEntitiesById(Long id);
 
-    List<Commodity> findAllByEddnNameIn(Collection<String> eddnName);
-
-    Commodity getCommodityEntitiesByEddnName(String eddnName);
 
     Optional<Commodity> findCommodityEntityByEddnName(String eddnName);
 

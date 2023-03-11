@@ -1,6 +1,7 @@
 package com.edcm.backend.core.schedule;
 
 import com.edcm.backend.core.services.category.CategoryTransactionService;
+import com.edcm.backend.core.services.commodity.CommodityTransactionService;
 import com.edcm.backend.core.tools.GithubDataProvider;
 import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
 import com.edcm.backend.infrastructure.domain.database.entities.CommodityCategory;
@@ -22,36 +23,15 @@ import java.util.stream.Collectors;
 @Service("commodityCheckService")
 public class CommodityCheckService {
     private final GithubDataProvider dataProvider;
-    private final CategoryTransactionService categoryTransactionService;
-    private final CommodityRepository repository;
+    private final CommodityTransactionService commodityTransactionService;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Scheduled(cron = "${scheduled.github.cron}")
     public void updateCommodities() {
-        log.debug("Checking commodities updates");
+        log.info("Checking commodities updates");
 
         var commoditiesInfo = dataProvider.getCommodities();
-
-        Set<String> categories = commoditiesInfo.stream()
-                                                .map(infoItem -> infoItem.getCategory().getName())
-                                                .collect(Collectors.toSet());
-
-        Map<String, CommodityCategory> categoryEntityMap = categoryTransactionService.batchCreateOrFind(categories);
-
-        var commodities = dataProvider.getCommodities()
-                                      .stream()
-                                      .map(commodity -> {
-                                          if (!repository.existsByEddnName(commodity.getEddnName())) {
-                                              return new Commodity(
-                                                      commodity.getName(),
-                                                      commodity.getEddnName(),
-                                                      categoryEntityMap.get(commodity.getCategory().getName())
-                                              );
-                                          }
-                                          return null;
-                                      })
-                                      .filter(Objects::nonNull)
-                                      .toList();
-        repository.saveAll(commodities);
+        commodityTransactionService.saveAll(commoditiesInfo);
+        log.info("Commodity update finished");
     }
 }

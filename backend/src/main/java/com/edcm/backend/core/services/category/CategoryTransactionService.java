@@ -7,8 +7,9 @@ import java.util.Collection;
 import java.util.Map;
 
 public interface CategoryTransactionService {
+    CommodityCategory UNKNOWN = new CommodityCategory(1L, "Unknown");
+
     CommodityCategory createOrFind(CommodityCategoryDto category);
 
     Map<String, CommodityCategory> batchCreateOrFind(Collection<String> categories);
-
 }

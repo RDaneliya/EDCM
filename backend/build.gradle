@@ -38,6 +38,7 @@ dependencies {
     implementation 'org.jetbrains:annotations:24.0.1'
     implementation 'io.swagger.core.v3:swagger-annotations:2.2.8'
     implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.14.2'
 
     compileOnly 'org.projectlombok:lombok:1.18.26'
     developmentOnly 'org.springframework.boot:spring-boot-devtools:3.0.4'

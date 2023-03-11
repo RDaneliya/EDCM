@@ -16,17 +16,15 @@ public class DefaultGithubDataProvider implements GithubDataProvider {
 
     @Override
     public List<CommodityDto> getCommodities() {
+        var commodities = githubOperations.getRegularCommodities().getItems();
+        var rareCommodities = githubOperations.getRareCommodities().getItems();
 
-        return githubOperations.getCommodities()
-            .getItems()
-            .entrySet()
-            .stream()
-            .map(item -> new GithubCommodityItemWithEddn(
-                item.getValue().getId(),
-                item.getValue().getCategory(),
-                item.getValue().getName(),
-                item.getKey()))
-            .map(mapper::githubItemToCommodityDto)
-            .toList();
+        commodities.addAll(rareCommodities);
+
+        return commodities.stream()
+                          .peek(item -> item.setSymbol(item.getSymbol().toLowerCase()))
+                          .map(mapper::githubItemToCommodityDto)
+                          .toList();
+
     }
 }

@@ -1,5 +1,6 @@
 package com.edcm.backend.core.services.commodity;
 
+import com.edcm.backend.core.shared.data.CommodityDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
 
 import java.util.Collection;
@@ -7,14 +8,8 @@ import java.util.List;
 
 public interface CommodityTransactionService {
 
-    Commodity createOrFindCommodity(String eddnName);
+    List<Commodity> saveAll(Collection<CommodityDto> commodities);
 
-    Commodity saveCommodity(Commodity commodity);
-
-    List<Commodity> saveAll(Collection<Commodity> commodities);
-
-    List<Commodity> findAllByEddnName(Collection<String> commodityNames);
-
-    boolean isExistByEddnName(String eddnName);
+    Commodity save(CommodityDto commodityDto);
 
 }

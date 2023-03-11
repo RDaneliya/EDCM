@@ -38,7 +38,11 @@ logging:
   level:
     com.edcm: DEBUG
 integrations:
-  github-commodities-url: https://raw.githubusercontent.com/RemainNA/cargo-manifest/main/items.json
+  github:
+    base-url: https://raw.githubusercontent.com/
+    commodities-path: EDCD/FDevIDs/master/commodity.csv
+    rare-commodities-path: /EDCD/FDevIDs/master/rare_commodity.csv
+
   eddb:
     eddb-url: https://eddb.io/
     factions-path: archive/v6/factions.json

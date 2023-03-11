@@ -1,5 +1,6 @@
 package com.edcm.backend.infrastructure.github;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,11 +9,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GithubCommodityItem {
-    @JsonProperty("id")
     private String id;
-    @JsonProperty("category")
+    private String symbol;
     private String category;
-    @JsonProperty("name")
     private String name;
 }

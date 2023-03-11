@@ -6,6 +6,7 @@ import com.edcm.backend.core.schedule.EddbCheckService;
 import com.edcm.backend.core.services.ChannelWatcher;
 import com.edcm.backend.core.services.commodity.EddnStationCommoditiesService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,7 +38,7 @@ public class ZeromqConfig {
     @DependsOn(value = {"channelWatcher", "commodityCheckService"})
     @ServiceActivator(inputChannel = "zeroMqChannel")
     public MessageHandler messageService(
-            ObjectMapper objectMapper,
+            JsonMapper objectMapper,
             EddnStationCommoditiesService eddnStationCommoditiesService,
             ChannelWatcher channelWatcher,
             CommodityCheckService commodityCheckService

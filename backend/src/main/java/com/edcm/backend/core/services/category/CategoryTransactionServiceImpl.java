@@ -30,31 +30,12 @@ public class CategoryTransactionServiceImpl implements CategoryTransactionServic
     @Override
     @Transactional
     public Map<String, CommodityCategory> batchCreateOrFind(Collection<String> categories) {
-        Map<String, CommodityCategory> entities = categories.stream()
-                                                            .map(item -> repository
-                                                                    .findCommodityCategoryEntityByName(item)
-                                                                    .orElseGet(() -> new CommodityCategory(item)))
-                                                            .collect(Collectors.toMap(
-                                                                    CommodityCategory::getName,
-                                                                    item -> item
-                                                            ));
-        List<CommodityCategory> notPersisting = entities.values().stream()
-                                                        .filter(item -> item.getId() == null)
-                                                        .toList();
+        return categories
+                .stream()
+                .map(name -> repository.findCommodityCategoryEntityByName(name)
+                                       .orElseGet(() -> repository.save(new CommodityCategory(name)))
+                )
+                .collect(Collectors.toMap(CommodityCategory::getName, item -> item));
 
-        Map<String, CommodityCategory> newItems = repository.saveAll(notPersisting).stream()
-                                                            .collect(Collectors.toMap(
-                                                                    CommodityCategory::getName,
-                                                                    item -> item
-                                                            ));
-
-        Map<String, CommodityCategory> persistingItems = entities.values().stream()
-                                                                 .filter(item -> item.getId() != null)
-                                                                 .collect(Collectors.toMap(
-                                                                         CommodityCategory::getName,
-                                                                         item -> item
-                                                                 ));
-        persistingItems.putAll(newItems);
-        return persistingItems;
     }
 }

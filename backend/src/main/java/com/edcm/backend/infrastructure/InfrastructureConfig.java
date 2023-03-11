@@ -2,6 +2,7 @@ package com.edcm.backend.infrastructure;
 
 import com.edcm.backend.core.mappers.commodity.CommodityMapper;
 import com.edcm.backend.core.properties.EddbProperties;
+import com.edcm.backend.core.properties.GithubProperties;
 import com.edcm.backend.core.tools.EddbDataProvider;
 import com.edcm.backend.core.tools.GithubDataProvider;
 import com.edcm.backend.infrastructure.eddb.DefaultEddbDataProvider;
@@ -10,10 +11,9 @@ import com.edcm.backend.infrastructure.eddb.EddbOperations;
 import com.edcm.backend.infrastructure.github.DefaultGithubDataProvider;
 import com.edcm.backend.infrastructure.github.DefaultGithubOperations;
 import com.edcm.backend.infrastructure.github.GithubOperations;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -23,15 +23,14 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 @RequiredArgsConstructor
 public class InfrastructureConfig {
-    @Value("${integrations.github-commodities-url}")
-    private String githubCommoditiesUrl;
 
     private final EddbProperties eddbProperties;
+    private final GithubProperties githubProperties;
 
     @Bean
     @Qualifier("githubCommoditiesWebClient")
     public WebClient githubWebClient() {
-        return WebClient.create(githubCommoditiesUrl);
+        return WebClient.create(githubProperties.getBaseUrl());
     }
 
     @Bean
@@ -52,9 +51,9 @@ public class InfrastructureConfig {
     @Bean
     public GithubOperations githubOperations(
             @Qualifier("githubCommoditiesWebClient") WebClient githubWebClient,
-            ObjectMapper objectMapper
+            CsvMapper csvMapper
     ) {
-        return new DefaultGithubOperations(githubWebClient, objectMapper);
+        return new DefaultGithubOperations(githubWebClient, githubProperties, csvMapper);
     }
 
     @Bean

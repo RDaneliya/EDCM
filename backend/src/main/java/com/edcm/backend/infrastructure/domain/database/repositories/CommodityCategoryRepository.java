@@ -7,8 +7,6 @@ import org.springframework.lang.NonNull;
 import java.util.Optional;
 
 public interface CommodityCategoryRepository extends JpaRepository<CommodityCategory, Long> {
-    CommodityCategory UNKNOWN = new CommodityCategory(1L, "Unknown");
-
     @NonNull
     CommodityCategory getCommodityCategoryEntityById(Long id);
 

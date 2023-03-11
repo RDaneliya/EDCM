@@ -9,6 +9,7 @@ import com.edcm.backend.infrastructure.eddn.schemas.journal.EddnJournalDockedPay
 import com.edcm.backend.infrastructure.eddn.schemas.journal.Event;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -16,14 +17,13 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 @RequiredArgsConstructor
 @Slf4j
 public class ZeromqMessageHandler implements MessageHandler {
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
     private final EddnStationCommoditiesService eddnStationCommoditiesService;
     private final ChannelWatcher channelWatcher;
 
@@ -53,7 +53,7 @@ public class ZeromqMessageHandler implements MessageHandler {
     }
 
     private void processCommodityData(String outputString) throws JsonProcessingException {
-        EddnCommodityPayload commodityPayload = objectMapper.readValue(
+        EddnCommodityPayload commodityPayload = jsonMapper.readValue(
                 outputString,
                 EddnCommodityPayload.class
         );
@@ -63,7 +63,7 @@ public class ZeromqMessageHandler implements MessageHandler {
 
     private void processJournalData(String ouputString) throws JsonProcessingException {
         if (ouputString.contains(Event.DOCKED.toString())) {
-            EddnJournalDockedPayload dockedPayload = objectMapper
+            EddnJournalDockedPayload dockedPayload = jsonMapper
                     .readValue(ouputString, EddnJournalDockedPayload.class);
 
         }
