@@ -1,5 +1,7 @@
 version: '3.9'
 
+name: "edcm"
+
 services:
   database:
     image: postgres:15.2-alpine3.17
