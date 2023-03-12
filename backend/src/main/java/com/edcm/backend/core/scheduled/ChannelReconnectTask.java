@@ -1,4 +1,4 @@
-package com.edcm.backend.core.schedule;
+package com.edcm.backend.core.scheduled;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

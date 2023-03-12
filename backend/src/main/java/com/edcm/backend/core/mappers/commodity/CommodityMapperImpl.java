@@ -3,7 +3,7 @@ package com.edcm.backend.core.mappers.commodity;
 import com.edcm.backend.core.shared.data.CommodityCategoryDto;
 import com.edcm.backend.core.shared.data.CommodityDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
-import com.edcm.backend.infrastructure.github.GithubCommodityItem;
+import com.edcm.backend.infrastructure.github.response.commodity.GithubCommodityItem;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;

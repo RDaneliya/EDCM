@@ -41,7 +41,8 @@ integrations:
   github:
     base-url: https://raw.githubusercontent.com/
     commodities-path: EDCD/FDevIDs/master/commodity.csv
-    rare-commodities-path: /EDCD/FDevIDs/master/rare_commodity.csv
+    rare-commodities-path: EDCD/FDevIDs/master/rare_commodity.csv
+    economies-path: EDCD/FDevIDs/master/economy.csv
 
   eddb:
     eddb-url: https://eddb.io/

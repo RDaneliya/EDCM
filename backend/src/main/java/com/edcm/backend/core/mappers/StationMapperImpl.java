@@ -53,7 +53,7 @@ public class StationMapperImpl implements StationMapper {
 
         var economies = dto.getEconomies().stream()
                            .map(economyMapper::toEntity)
-                           .collect(Collectors.toSet());
+                           .toList();
 
         var system = systemMapper.toEntity(dto.getSystem());
 

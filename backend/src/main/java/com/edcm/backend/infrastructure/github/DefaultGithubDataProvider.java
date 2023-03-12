@@ -2,6 +2,7 @@ package com.edcm.backend.infrastructure.github;
 
 import com.edcm.backend.core.mappers.commodity.CommodityMapper;
 import com.edcm.backend.core.shared.data.CommodityDto;
+import com.edcm.backend.core.shared.data.EconomyDto;
 import com.edcm.backend.core.tools.GithubDataProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,14 @@ public class DefaultGithubDataProvider implements GithubDataProvider {
                           .map(mapper::githubItemToCommodityDto)
                           .toList();
 
+    }
+
+    @Override
+    public List<EconomyDto> getEconomies() {
+        return githubOperations.getEconomies()
+                .getGithubEconomyItems()
+                .stream()
+                .map(item -> new EconomyDto(null, item.getId(), item.getName()))
+                .toList();
     }
 }

@@ -1,10 +1,11 @@
 package com.edcm.backend.infrastructure.github;
 
 import com.edcm.backend.core.properties.GithubProperties;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.edcm.backend.infrastructure.github.response.commodity.GithubCommodityItem;
+import com.edcm.backend.infrastructure.github.response.commodity.GithubCommodityResponse;
+import com.edcm.backend.infrastructure.github.response.economy.GithubEconomyItem;
+import com.edcm.backend.infrastructure.github.response.economy.GithubEconomyResponse;
 import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.MapType;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,11 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.servlet.handler.MappedInterceptor;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -40,10 +41,7 @@ public class DefaultGithubOperations implements GithubOperations {
                 .block();
 
 
-        if (response != null && !response.isBlank()) {
-            return parseCsv(response);
-        }
-        return null;
+        return instantiateCommodityResponse(response);
     }
 
     @Override
@@ -55,28 +53,55 @@ public class DefaultGithubOperations implements GithubOperations {
                 .bodyToMono(String.class)
                 .block();
 
-
-        if (response != null && !response.isBlank()) {
-            return parseCsv(response);
-        }
-        return new GithubCommodityResponse(new ArrayList<>());
+        return instantiateCommodityResponse(response);
     }
 
-    private GithubCommodityResponse parseCsv(@NotNull String response) {
+    @Override
+    public GithubEconomyResponse getEconomies() {
+        String response = webClient
+                .get()
+                .uri(githubProperties.getEconomiesPath())
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
+
+        if (response != null && !response.isBlank()) {
+            try {
+                return parseCsv(GithubEconomyResponse.class, GithubEconomyItem.class, response);
+            } catch (ReflectiveOperationException e) {
+                log.error("Error instantiating class", e);
+            }
+        }
+        return new GithubEconomyResponse();
+    }
+
+    private GithubCommodityResponse instantiateCommodityResponse(String responseString) {
+        if (responseString != null && !responseString.isBlank()) {
+            try {
+                return parseCsv(GithubCommodityResponse.class, GithubCommodityItem.class, responseString);
+            } catch (ReflectiveOperationException e) {
+                log.error("Error instantiating class", e);
+            }
+        }
+        return new GithubCommodityResponse();
+    }
+
+    private <T> T parseCsv(@NotNull Class<T> wrapper, @NotNull Class<?> item, @NotNull String response)
+            throws ReflectiveOperationException {
         CsvSchema csvSchema = CsvSchema
                 .emptySchema()
                 .withHeader()
                 .withColumnSeparator(',')
                 .withoutQuoteChar();
         try (
-                MappingIterator<GithubCommodityItem> iterator = csvMapper.readerFor(GithubCommodityItem.class)
+                MappingIterator<GithubCommodityItem> iterator = csvMapper.readerFor(item)
                                                                          .with(csvSchema)
                                                                          .readValues(response)
         ) {
-            return new GithubCommodityResponse(iterator.readAll());
+            return wrapper.getDeclaredConstructor(List.class).newInstance(iterator.readAll());
         } catch (IOException e) {
-            log.warn("Error downloading commodities", e);
+            log.warn("Error parsing response", e);
         }
-        return new GithubCommodityResponse(new ArrayList<>());
+        return wrapper.getDeclaredConstructor(List.class).newInstance(new ArrayList<>());
     }
 }

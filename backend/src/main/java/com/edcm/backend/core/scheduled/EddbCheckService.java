@@ -1,4 +1,4 @@
-package com.edcm.backend.core.schedule;
+package com.edcm.backend.core.scheduled;
 
 import com.edcm.backend.core.mappers.FactionMapper;
 import com.edcm.backend.core.services.factions.FactionsService;

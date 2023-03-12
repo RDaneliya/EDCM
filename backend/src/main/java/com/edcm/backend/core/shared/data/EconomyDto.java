@@ -11,5 +11,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class EconomyDto implements Serializable {
     private Long id;
+    private String eddnName;
     private String name;
 }

@@ -1,11 +1,9 @@
-package com.edcm.backend.core.schedule;
+package com.edcm.backend.core.scheduled;
 
-import com.edcm.backend.core.services.category.CategoryTransactionService;
 import com.edcm.backend.core.services.commodity.CommodityTransactionService;
+import com.edcm.backend.core.services.economy.EconomyTransactionService;
 import com.edcm.backend.core.tools.GithubDataProvider;
-import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
-import com.edcm.backend.infrastructure.domain.database.entities.CommodityCategory;
-import com.edcm.backend.infrastructure.domain.database.repositories.CommodityRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,17 +11,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Slf4j
 @RequiredArgsConstructor
-@Service("commodityCheckService")
-public class CommodityCheckService {
+@Service("githubInfoCheckService")
+public class GithubInfoCheckService {
     private final GithubDataProvider dataProvider;
     private final CommodityTransactionService commodityTransactionService;
+    private final EconomyTransactionService economyTransactionService;
+
+    @PostConstruct
+    public void updateAll(){
+        updateCommodities();
+        updateEconomies();
+    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Scheduled(cron = "${scheduled.github.cron}")
@@ -33,5 +33,13 @@ public class CommodityCheckService {
         var commoditiesInfo = dataProvider.getCommodities();
         commodityTransactionService.saveAll(commoditiesInfo);
         log.info("Commodity update finished");
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Scheduled(cron = "${scheduled.github.cron}")
+    public void updateEconomies() {
+        log.info("Checking economies update");
+        economyTransactionService.saveAll(dataProvider.getEconomies());
+        log.info("Economy update finished");
     }
 }

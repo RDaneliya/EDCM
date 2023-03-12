@@ -1,4 +1,4 @@
-package com.edcm.backend.infrastructure.github;
+package com.edcm.backend.infrastructure.github.response.commodity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

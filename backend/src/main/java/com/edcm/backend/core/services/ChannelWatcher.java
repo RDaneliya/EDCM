@@ -1,7 +1,7 @@
 package com.edcm.backend.core.services;
 
 import com.edcm.backend.core.properties.ZeromqProperties;
-import com.edcm.backend.core.schedule.ChannelReconnectTask;
+import com.edcm.backend.core.scheduled.ChannelReconnectTask;
 import org.springframework.integration.zeromq.channel.ZeroMqChannel;
 import org.springframework.stereotype.Component;
 

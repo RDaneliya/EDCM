@@ -31,7 +31,10 @@ public class Economy {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "eddn_name", nullable = false, unique = true)
+    private String eddnName;
+
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Override

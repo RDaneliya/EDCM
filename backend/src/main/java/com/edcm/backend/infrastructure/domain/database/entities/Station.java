@@ -61,7 +61,7 @@ public class Station {
     @JoinTable(name = "station_economies",
             joinColumns = @JoinColumn(name = "station_id"),
             inverseJoinColumns = @JoinColumn(name = "economies_id"))
-    private Set<Economy> economies = new LinkedHashSet<>();
+    private List<Economy> economies = new ArrayList<>();
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "station_type_id", referencedColumnName = "id")
@@ -72,7 +72,7 @@ public class Station {
     @JoinTable(name = "station_station_services",
             joinColumns = @JoinColumn(name = "station_id"),
             inverseJoinColumns = @JoinColumn(name = "station_services_id"))
-    private Set<StationService> stationServices = new LinkedHashSet<>();
+    private List<StationService> stationServices = new ArrayList<>();
 
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)

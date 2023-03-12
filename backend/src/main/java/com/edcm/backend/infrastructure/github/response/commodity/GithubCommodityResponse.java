@@ -1,4 +1,4 @@
-package com.edcm.backend.infrastructure.github;
+package com.edcm.backend.infrastructure.github.response.commodity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

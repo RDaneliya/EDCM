@@ -11,4 +11,5 @@ public class GithubProperties {
     private String baseUrl;
     private String commoditiesPath;
     private String rareCommoditiesPath;
+    private String economiesPath;
 }

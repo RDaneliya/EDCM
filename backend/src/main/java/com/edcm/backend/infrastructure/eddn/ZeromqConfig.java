@@ -1,11 +1,9 @@
 package com.edcm.backend.infrastructure.eddn;
 
 import com.edcm.backend.core.properties.ZeromqProperties;
-import com.edcm.backend.core.schedule.CommodityCheckService;
-import com.edcm.backend.core.schedule.EddbCheckService;
+import com.edcm.backend.core.scheduled.GithubInfoCheckService;
 import com.edcm.backend.core.services.ChannelWatcher;
 import com.edcm.backend.core.services.commodity.EddnStationCommoditiesService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -35,16 +33,13 @@ public class ZeromqConfig {
     }
 
     @Bean
-    @DependsOn(value = {"channelWatcher", "commodityCheckService"})
+    @DependsOn(value = {"channelWatcher", "githubInfoCheckService"})
     @ServiceActivator(inputChannel = "zeroMqChannel")
     public MessageHandler messageService(
             JsonMapper objectMapper,
             EddnStationCommoditiesService eddnStationCommoditiesService,
-            ChannelWatcher channelWatcher,
-            CommodityCheckService commodityCheckService
+            ChannelWatcher channelWatcher
     ) {
-
-        commodityCheckService.updateCommodities();
 
         return new ZeromqMessageHandler(objectMapper, eddnStationCommoditiesService, channelWatcher);
     }
