@@ -7,6 +7,10 @@ services:
     image: postgres:15.2-alpine3.17
     env_file:
       - env/db.env
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     user: postgres
     volumes:
       - edcm-postgres-data:/var/lib/postgresql/data
@@ -18,15 +22,17 @@ services:
     container_name: database
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready"]
+      test: [ "CMD-SHELL", "pg_isready" ]
       interval: 10s
       timeout: 5s
       retries: 10
 
   flyway:
     image: flyway/flyway:9.15.2-alpine
-    env_file:
-      - env/flyway.env
+    environment:
+      - DB_URL
+      - DB_USER=admin
+      - DB_PASSWORD=admin
     command: -url=jdbc:postgresql://database:5432/edcm -schemas=public -user=admin -password=admin -connectRetries=60 migrate
     volumes:
       - ../backend/src/main/resources/db/migration:/flyway/sql
@@ -39,8 +45,11 @@ services:
 
   backend:
     image: vantys/backend:latest
-    env_file:
-      - env/backend.env
+    environment:
+      - DB_URL
+      - DB_USER
+      - DB_PASSWORD
+      - FLYWAY_ENABLED
     depends_on:
       database:
         condition: service_healthy
@@ -58,3 +67,4 @@ networks:
 
 volumes:
   edcm-postgres-data:
+    driver: local
