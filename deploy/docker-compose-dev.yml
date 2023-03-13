@@ -3,8 +3,10 @@ version: '3.9'
 services:
   database:
     image: postgres:15.2-alpine3.17
-    env_file:
-      - env/db.env
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=edcm
     user: postgres
     volumes:
       - edcm-postgres-data:/var/lib/postgresql/data
@@ -16,19 +18,21 @@ services:
     container_name: database
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 10
 
   flyway:
     image: flyway/flyway:9.15.2-alpine
-    env_file:
-      - env/flyway.env
+    environment:
+      - DB_URL=jdbc:postgresql://database:5432/edcm
+      - DB_USER=admin
+      - DB_PASSWORD=admin
     command: -url=jdbc:postgresql://database:5432/edcm -schemas=public -user=admin -password=admin -connectRetries=60 migrate
     volumes:
       - ../backend/src/main/resources/db/migration:/flyway/sql
-      - ./flyway.config:/flyway/conf/flyway.config
+      - ./flyway.config:/flyway/conf/flyway.conf
     depends_on:
       database:
         condition: service_healthy
@@ -39,8 +43,11 @@ services:
     build:
       context: ../backend/
       dockerfile: Dockerfile
-    env_file:
-      - env/backend.env
+    environment:
+      - DB_URL=jdbc:postgresql://database:5432/edcm
+      - DB_USER=admin
+      - DB_PASSWORD=admin
+      - FLYWAY_ENABLED=false
     depends_on:
       database:
         condition: service_healthy
