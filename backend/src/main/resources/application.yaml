@@ -1,25 +1,28 @@
 spring:
+  codec:
+    max-in-memory-size: "500MB"
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   devtools:
     livereload:
       enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    generate-ddl: true
+    open-in-view: false
+    show-sql: false
   flyway:
-    enabled: true
+    enabled: ${FLYWAY_ENABLED}
     url: jdbc:postgresql://localhost:5432/postgres
     user: postgres
     password: postgres
     schemas: public
     create-schemas: true
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    generate-ddl: true
-    open-in-view: false
-    show-sql: false
 management:
   server:
     port: 8080
@@ -34,10 +37,23 @@ management:
 logging:
   level:
     com.edcm: DEBUG
-github-commodities-url: https://raw.githubusercontent.com/RemainNA/cargo-manifest/main/items.json
+integrations:
+  github:
+    base-url: https://raw.githubusercontent.com/
+    commodities-path: EDCD/FDevIDs/master/commodity.csv
+    rare-commodities-path: EDCD/FDevIDs/master/rare_commodity.csv
+    economies-path: EDCD/FDevIDs/master/economy.csv
+
+  eddb:
+    eddb-url: https://eddb.io/
+    factions-path: archive/v6/factions.json
+    commodities-path: archive/v6/commodities.json
 zeromq:
   eddn-channel-url: tcp://eddn.edcd.io:9500:9500
   timeout: 600000
 scheduled:
   github:
     cron: "0 0 */12 * * ?"
+  eddb:
+    factions:
+      cron: "0 0 1 * * FRI"

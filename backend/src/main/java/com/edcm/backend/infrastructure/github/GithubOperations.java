@@ -1,7 +1,10 @@
 package com.edcm.backend.infrastructure.github;
 
-import com.edcm.backend.infrastructure.domain.github.GithubCommodityResponse;
+import com.edcm.backend.infrastructure.github.response.commodity.GithubCommodityResponse;
+import com.edcm.backend.infrastructure.github.response.economy.GithubEconomyResponse;
 
 public interface GithubOperations {
-    GithubCommodityResponse getCommodities();
+    GithubCommodityResponse getRegularCommodities();
+    GithubCommodityResponse getRareCommodities();
+    GithubEconomyResponse getEconomies();
 }

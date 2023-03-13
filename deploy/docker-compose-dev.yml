@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:15.2-alpine3.17
+    env_file:
+      - env/db.env
+    user: postgres
+    volumes:
+      - edcm-postgres-data:/var/lib/postgresql/data
+      - .:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+    container_name: database
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  flyway:
+    image: flyway/flyway:9.15.2-alpine
+    env_file:
+      - env/flyway.env
+    command: -url=jdbc:postgresql://database:5432/edcm -schemas=public -user=admin -password=admin -connectRetries=60 migrate
+    volumes:
+      - ../backend/src/main/resources/db/migration:/flyway/sql
+      - ./flyway.config:/flyway/conf/flyway.config
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: ../backend/
+      dockerfile: Dockerfile
+    env_file:
+      - env/backend.env
+    depends_on:
+      database:
+        condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    container_name: backend
+    restart: unless-stopped
+
+networks:
+  backend:
+
+volumes:
+  edcm-postgres-data:

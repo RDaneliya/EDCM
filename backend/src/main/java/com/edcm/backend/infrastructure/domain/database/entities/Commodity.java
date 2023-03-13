@@ -1,5 +1,15 @@
 package com.edcm.backend.infrastructure.domain.database.entities;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,15 +18,6 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Immutable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
@@ -43,7 +44,7 @@ public class Commodity {
     @Column(name = "eddn_name", nullable = false, unique = true)
     private String eddnName;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
     private CommodityCategory category;
 
@@ -51,14 +52,6 @@ public class Commodity {
         this.name = name;
         this.eddnName = eddnName;
         this.category = category;
-    }
-
-    public String getEddnName() {
-        return eddnName;
-    }
-
-    public void setEddnName(String eddnName) {
-        this.eddnName = eddnName;
     }
 
     @Override
