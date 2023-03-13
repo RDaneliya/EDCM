@@ -12,7 +12,6 @@ services:
     user: postgres
     volumes:
       - edcm-postgres-data:/var/lib/postgresql/data
-      - .:/docker-entrypoint-initdb.d
     ports:
       - "5432:5432"
     networks:
@@ -20,7 +19,7 @@ services:
     container_name: database
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
+      test: ["CMD-SHELL", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -29,12 +28,12 @@ services:
     image: flyway/flyway:9.15.2-alpine
     environment:
       - DB_URL
-      - DB_USER=admin
-      - DB_PASSWORD=admin
-    command: -url=jdbc:postgresql://database:5432/edcm -schemas=public -user=admin -password=admin -connectRetries=60 migrate
+      - DB_USER
+      - DB_PASSWORD
+    command: -configFiles="/flyway/conf/flyway.conf" migrate
     volumes:
       - ../backend/src/main/resources/db/migration:/flyway/sql
-      - ./flyway.config:/flyway/conf/flyway.config
+      - ./flyway.config:/flyway/conf/flyway.conf
     depends_on:
       database:
         condition: service_healthy
