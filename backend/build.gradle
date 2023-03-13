@@ -45,8 +45,11 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.0.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.3.Final'
+    testCompileOnly 'org.projectlombok:lombok:1.18.26'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor "org.mapstruct:mapstruct-processor:1.5.3.Final"
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.0.4'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.10.0'
     testImplementation 'org.springframework.integration:spring-integration-test:6.0.3'
 }
 
