@@ -32,7 +32,10 @@ public class EddnJournalInformationServiceImpl implements EddnJournalInformation
         var message = payload.getMessage();
 
         SystemDto systemDto = getSystemDto(message);
-        StationTypeDto stationTypeDto = getStationTypeDto(message);
+        StationTypeDto stationTypeDto = null;
+        if(message.getStationType() != null) {
+            stationTypeDto = getStationTypeDto(message);
+        }
         Set<EconomyDto> economyDtos = message
                 .getStationEconomies()
                 .stream()
