@@ -32,10 +32,7 @@ public class EddnJournalInformationServiceImpl implements EddnJournalInformation
         var message = payload.getMessage();
 
         SystemDto systemDto = getSystemDto(message);
-        StationTypeDto stationTypeDto = null;
-        if(message.getStationType() != null) {
-            stationTypeDto = getStationTypeDto(message);
-        }
+        StationTypeDto stationTypeDto = getStationTypeDto(message);
         Set<EconomyDto> economyDtos = message
                 .getStationEconomies()
                 .stream()
@@ -57,11 +54,15 @@ public class EddnJournalInformationServiceImpl implements EddnJournalInformation
     @NotNull
     private static StationTypeDto getStationTypeDto(EddnJournalDockedMessage message) {
         var landingPads = message.getLandingPads();
-        StationTypeDto.LandingPadsDto landingPadsDto = new StationTypeDto.LandingPadsDto(
-                landingPads.getLarge(),
-                landingPads.getMedium(),
-                landingPads.getSmall()
-        );
+        StationTypeDto.LandingPadsDto landingPadsDto = null;
+        if (message.getLandingPads() != null) {
+            landingPadsDto = new StationTypeDto.LandingPadsDto(
+                    landingPads.getLarge(),
+                    landingPads.getMedium(),
+                    landingPads.getSmall()
+            );
+        }
+
         StationTypeDto stationTypeDto = new StationTypeDto(null, message.getStationType(), landingPadsDto);
         return stationTypeDto;
     }
