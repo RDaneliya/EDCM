@@ -1,12 +1,14 @@
-package com.edcm.backend.core.services.factions;
+package com.edcm.backend.core.services.faction;
 
+import com.edcm.backend.core.mappers.AllegianceMapper;
 import com.edcm.backend.core.mappers.FactionMapper;
+import com.edcm.backend.core.mappers.GovernmentMapper;
+import com.edcm.backend.core.shared.data.FactionDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Allegiance;
 import com.edcm.backend.infrastructure.domain.database.entities.Government;
-import com.edcm.backend.infrastructure.domain.database.repositories.GovernmentRepository;
-import com.edcm.backend.core.shared.data.FactionDto;
 import com.edcm.backend.infrastructure.domain.database.repositories.AllegianceRepository;
 import com.edcm.backend.infrastructure.domain.database.repositories.FactionRepository;
+import com.edcm.backend.infrastructure.domain.database.repositories.GovernmentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 public class FactionsServiceImpl implements FactionsService {
     private final FactionRepository factionRepository;
     private final FactionMapper factionMapper;
+    private final GovernmentMapper governmentMapper;
+    private final AllegianceMapper allegianceMapper;
     private final GovernmentRepository governmentRepository;
     private final AllegianceRepository allegianceRepository;
 
@@ -39,8 +43,9 @@ public class FactionsServiceImpl implements FactionsService {
                                      .map(FactionDto::getGovernment)
                                      .collect(Collectors.toSet())
                                      .stream()
-                                     .map(item -> new Government(null, item.getName()))
+                                     .map(governmentMapper::toEntity)
                                      .collect(Collectors.toSet());
+
         Map<String, Government> governmentMap = governmentRepository
                 .saveAll(governments)
                 .stream()
@@ -50,8 +55,9 @@ public class FactionsServiceImpl implements FactionsService {
                                      .map(FactionDto::getAllegiance)
                                      .collect(Collectors.toSet())
                                      .stream()
-                                     .map(item -> new Allegiance(null, item.getName()))
+                                     .map(allegianceMapper::toEntity)
                                      .collect(Collectors.toSet());
+
         Map<String, Allegiance> allegianceMap = allegianceRepository
                 .saveAll(allegiances)
                 .stream()

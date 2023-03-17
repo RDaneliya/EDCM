@@ -22,6 +22,9 @@ public class EddnJournalDockedMessage {
     @JsonProperty("MarketID")
     private Long marketId;
 
+    @JsonProperty("Multicrew")
+    private Boolean multicrew;
+
     @JsonProperty("StarPos")
     private List<Double> starPosition;
 
@@ -34,8 +37,20 @@ public class EddnJournalDockedMessage {
     @JsonProperty("StationAllegiance")
     private String stationAllegiance;
 
+    @JsonProperty("SystemEconomy")
+    private String systemEconomy;
+
     @JsonProperty("StationEconomies")
     private List<EddnEconomy> stationEconomies;
+
+    @JsonProperty("StationFaction")
+    private StationFaction stationFaction;
+
+    @JsonProperty("StationGovernment")
+    private String stationGovernment;
+
+    @JsonProperty("StationServices")
+    private List<String> stationServices;
 
     @JsonProperty("StationType")
     private String stationType;
@@ -44,6 +59,8 @@ public class EddnJournalDockedMessage {
     private String event;
 
     @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class LandingPads {
 
         @JsonProperty("Large")
@@ -54,5 +71,15 @@ public class EddnJournalDockedMessage {
 
         @JsonProperty("Small")
         private Long small;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class StationFaction {
+        @JsonProperty("FactionState")
+        private String factionState;
+        @JsonProperty("Name")
+        private String name;
     }
 }

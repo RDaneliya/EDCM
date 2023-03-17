@@ -16,8 +16,14 @@ import lombok.Setter;
 public class State {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+
+    @Column(name = "eddn_id", nullable = false, unique = true)
+    private String eddnId;
+
+    @Column(name = "eddb_id", unique = true)
+    private Long eddbId;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

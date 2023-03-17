@@ -13,7 +13,7 @@ public class SystemTransactionServiceImpl implements SystemTransactionService {
     @Override
     public System createOrFindSystem(String name) {
         return repository.findByName(name).orElseGet(() -> {
-            var system = new System(null, name, null);
+            var system = new System(null, name, null, null, null);
             return repository.save(system);
         });
     }

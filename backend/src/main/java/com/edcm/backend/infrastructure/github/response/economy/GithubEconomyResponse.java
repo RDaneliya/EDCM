@@ -11,4 +11,12 @@ import java.util.List;
 @NoArgsConstructor
 public class GithubEconomyResponse {
     private List<GithubEconomyItem> githubEconomyItems;
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class GithubEconomyItem {
+        private String id;
+        private String name;
+    }
 }

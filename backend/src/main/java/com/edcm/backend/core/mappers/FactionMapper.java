@@ -9,10 +9,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING, uses = {
-        AllegianceMapper.class,
-        GovernmentMapper.class
-})
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface FactionMapper {
     Faction toEntity(FactionDto factionDto);
 

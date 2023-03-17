@@ -23,10 +23,10 @@ import java.util.Objects;
 public class StationType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @Column(name = "type")
+    @Column(name = "type", unique = true, nullable = false)
     private String type;
 
     @Embedded

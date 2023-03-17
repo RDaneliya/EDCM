@@ -3,15 +3,16 @@ package com.edcm.backend.infrastructure.eddn;
 import com.edcm.backend.core.exceptions.NoSchemaException;
 import com.edcm.backend.core.services.ChannelWatcher;
 import com.edcm.backend.core.services.commodity.EddnStationCommoditiesService;
+import com.edcm.backend.core.services.journal.EddnJournalInformationService;
 import com.edcm.backend.infrastructure.eddn.schemas.MessageSchema;
 import com.edcm.backend.infrastructure.eddn.schemas.commodity.EddnCommodityPayload;
 import com.edcm.backend.infrastructure.eddn.schemas.journal.EddnJournalDockedPayload;
 import com.edcm.backend.infrastructure.eddn.schemas.journal.Event;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
@@ -23,8 +24,9 @@ import java.util.zip.Inflater;
 @RequiredArgsConstructor
 @Slf4j
 public class ZeromqMessageHandler implements MessageHandler {
-    private final JsonMapper jsonMapper;
     private final EddnStationCommoditiesService eddnStationCommoditiesService;
+    private final EddnJournalInformationService eddnJournalInformationService;
+    private final JsonMapper jsonMapper;
     private final ChannelWatcher channelWatcher;
 
     @Override
@@ -40,12 +42,12 @@ public class ZeromqMessageHandler implements MessageHandler {
             String outputString = new String(output, 0, outputLength, StandardCharsets.UTF_8);
             MessageSchema schemaType = getSchema(outputString);
 
-            if(schemaType == null){
+            if (schemaType == null) {
                 return;
             }
-
-            if (schemaType == MessageSchema.COMMODITY) {
-                processCommodityData(outputString);
+            switch (schemaType) {
+                case COMMODITY -> processCommodityData(outputString);
+                case JOURNAL -> processJournalData(outputString);
             }
         } catch (DataFormatException | JsonProcessingException e) {
             log.error(e.getMessage());
@@ -62,10 +64,12 @@ public class ZeromqMessageHandler implements MessageHandler {
     }
 
     private void processJournalData(String ouputString) throws JsonProcessingException {
-        if (ouputString.contains(Event.DOCKED.toString())) {
+        String eventCheck = String.format("\"event\": \"%s\"", Event.DOCKED);
+        if (StringUtils.containsIgnoreCase(ouputString, eventCheck)) {
             EddnJournalDockedPayload dockedPayload = jsonMapper
                     .readValue(ouputString, EddnJournalDockedPayload.class);
 
+            eddnJournalInformationService.saveDockedJournalData(dockedPayload);
         }
     }
 

@@ -5,10 +5,11 @@ import com.edcm.backend.infrastructure.domain.database.entities.Economy;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public interface EconomyTransactionService {
     Economy saveEconomy(EconomyDto economyDto);
     List<Economy> saveAll(Collection<EconomyDto> economyDtos);
 
-    List<Economy> findAll(Collection<String> names);
+    Set<Economy> findAll(Collection<String> names);
 }

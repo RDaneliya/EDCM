@@ -1,6 +1,8 @@
 package com.edcm.backend.infrastructure.eddb;
 
 import com.edcm.backend.core.properties.EddbProperties;
+import com.edcm.backend.infrastructure.eddb.factions.EddbFactionItem;
+import com.edcm.backend.infrastructure.eddb.factions.EddbFactionsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,6 +22,7 @@ public class DefaultEddbOperations implements EddbOperations {
                                                .uri(eddbProperties.getFactionsPath())
                                                .retrieve()
                                                .bodyToMono(responseClass)
+
                                                .block();
         return new EddbFactionsResponse(items);
     }

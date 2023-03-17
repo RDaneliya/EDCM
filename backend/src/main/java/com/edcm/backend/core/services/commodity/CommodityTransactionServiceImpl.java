@@ -9,11 +9,9 @@ import com.edcm.backend.infrastructure.domain.database.repositories.CommodityRep
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,5 +57,12 @@ public class CommodityTransactionServiceImpl implements CommodityTransactionServ
         CommodityCategory category = categoryTransactionService.createOrFind(commodityDto.getCategory());
         var commodity = new Commodity(null, commodityDto.getName(), commodityDto.getEddnName(), category);
         return commodityRepository.save(commodity);
+    }
+
+    @Override
+    public Map<String, Commodity> findAll(List<String> names) {
+        return commodityRepository.findByEddnNameInIgnoreCase(names)
+                .stream()
+                .collect(Collectors.toMap(Commodity::getEddnName, item -> item));
     }
 }

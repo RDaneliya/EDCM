@@ -11,4 +11,6 @@ public class EddbProperties {
     private String eddbUrl;
     private String factionsPath;
     private String commoditiesPath;
+    private String governmentPath;
+    private String allegiancesPath;
 }

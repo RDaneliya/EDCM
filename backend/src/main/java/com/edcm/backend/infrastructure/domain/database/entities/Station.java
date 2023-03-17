@@ -4,6 +4,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -24,9 +26,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -41,8 +42,11 @@ public class Station {
 
     @Id
     @Column(name = "id")
-    @Immutable
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "market_id", nullable = false, unique = true)
+    private Long marketId;
 
     @Column(name = "name", nullable = false)
     @Immutable
@@ -52,16 +56,16 @@ public class Station {
     @JoinColumn(name = "system", nullable = false)
     private System system;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "station", cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "station", cascade = {CascadeType.ALL})
     @ToString.Exclude
-    private List<StationCommodity> commodities = new ArrayList<>();
+    private Set<StationCommodity> commodities = new LinkedHashSet<>();
 
     @ToString.Exclude
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "station_economies",
             joinColumns = @JoinColumn(name = "station_id"),
             inverseJoinColumns = @JoinColumn(name = "economies_id"))
-    private List<Economy> economies = new ArrayList<>();
+    private Set<Economy> economies = new LinkedHashSet<>();
 
     @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "station_type_id", referencedColumnName = "id")
@@ -72,7 +76,7 @@ public class Station {
     @JoinTable(name = "station_station_services",
             joinColumns = @JoinColumn(name = "station_id"),
             inverseJoinColumns = @JoinColumn(name = "station_services_id"))
-    private List<StationService> stationServices = new ArrayList<>();
+    private Set<StationService> stationServices = new LinkedHashSet<>();
 
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.ALL)
@@ -87,14 +91,14 @@ public class Station {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
 
-    public Station(Long id, String name, System system) {
-        this.id = id;
+    public Station(Long marketId, String name, System system) {
+        this.marketId = marketId;
         this.name = name;
         this.system = system;
     }
 
 
-    public void addCommodities(List<StationCommodity> commodities) {
+    public void addCommodities(Collection<StationCommodity> commodities) {
         this.commodities.addAll(commodities);
     }
 
@@ -126,7 +130,4 @@ public class Station {
         return getClass().hashCode();
     }
 
-    public boolean isCarrier() {
-        return name.matches("([A-Z0-9]){3}-([A-Z0-9]){3}");
-    }
 }

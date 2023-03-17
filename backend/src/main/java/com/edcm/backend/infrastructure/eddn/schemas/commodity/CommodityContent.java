@@ -23,7 +23,7 @@ public class CommodityContent {
     @JsonProperty("odyssey")
     private boolean odyssey;
     @JsonProperty("prohibited")
-    private List<String> prohibited = null;
+    private List<String> prohibited;
     @JsonProperty("stationName")
     private String stationName;
     @JsonProperty("systemName")

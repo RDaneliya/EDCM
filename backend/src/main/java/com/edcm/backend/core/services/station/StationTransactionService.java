@@ -4,7 +4,7 @@ import com.edcm.backend.core.shared.data.StationDto;
 
 public interface StationTransactionService {
 
-    StationDto createOrFindCarrier(String code);
+    StationDto createOrFindStation(Long marketId);
 
     StationDto saveStation(StationDto station);
 }

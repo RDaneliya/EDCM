@@ -1,4 +1,4 @@
-package com.edcm.backend.infrastructure.eddb;
+package com.edcm.backend.infrastructure.eddb.factions;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

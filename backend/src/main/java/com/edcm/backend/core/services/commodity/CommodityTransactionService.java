@@ -5,6 +5,7 @@ import com.edcm.backend.infrastructure.domain.database.entities.Commodity;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 public interface CommodityTransactionService {
 
@@ -12,4 +13,5 @@ public interface CommodityTransactionService {
 
     Commodity save(CommodityDto commodityDto);
 
+    Map<String, Commodity> findAll(List<String> names);
 }

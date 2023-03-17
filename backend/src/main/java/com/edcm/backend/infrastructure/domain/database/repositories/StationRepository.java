@@ -14,4 +14,6 @@ public interface StationRepository extends JpaRepository<Station, Long> {
 
     Optional<Station> findByNameAndSystem_Name(@NonNull String stationName, @NonNull String systemName);
 
+    Optional<Station> findByMarketId(Long marketId);
+
 }

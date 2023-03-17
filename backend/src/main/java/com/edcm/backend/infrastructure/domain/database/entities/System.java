@@ -1,11 +1,14 @@
 package com.edcm.backend.infrastructure.domain.database.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +40,16 @@ public class System {
 
     @Embedded
     private Coordinates coordinates;
+
+    @ToString.Exclude
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "allegiance_id")
+    private Allegiance allegiance;
+
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "economy_id")
+    private Economy economy;
 
     @Override
     public boolean equals(Object o) {

@@ -1,4 +1,4 @@
-package com.edcm.backend.core.services.factions;
+package com.edcm.backend.core.services.faction;
 
 import com.edcm.backend.core.shared.data.FactionDto;
 

@@ -1,6 +1,6 @@
 package com.edcm.backend.infrastructure;
 
-import com.edcm.backend.core.mappers.commodity.CommodityMapper;
+import com.edcm.backend.core.mappers.CommodityMapper;
 import com.edcm.backend.core.properties.EddbProperties;
 import com.edcm.backend.core.properties.GithubProperties;
 import com.edcm.backend.core.tools.EddbDataProvider;
@@ -41,6 +41,7 @@ public class InfrastructureConfig {
                                                  .defaultCodecs()
                                                  .maxInMemorySize(20 * 1024 * 1024)
                                          )
+
                                          .build();
         return WebClient.builder()
                         .baseUrl(eddbProperties.getEddbUrl())

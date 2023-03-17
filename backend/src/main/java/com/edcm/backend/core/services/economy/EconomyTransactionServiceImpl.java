@@ -1,6 +1,6 @@
 package com.edcm.backend.core.services.economy;
 
-import com.edcm.backend.core.mappers.economy.EconomyMapper;
+import com.edcm.backend.core.mappers.EconomyMapper;
 import com.edcm.backend.core.shared.data.EconomyDto;
 import com.edcm.backend.infrastructure.domain.database.entities.Economy;
 import com.edcm.backend.infrastructure.domain.database.repositories.EconomyRepository;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -32,7 +33,7 @@ public class EconomyTransactionServiceImpl implements EconomyTransactionService 
     }
 
     @Override
-    public List<Economy> findAll(Collection<String> names) {
+    public Set<Economy> findAll(Collection<String> names) {
         return economyRepository.findAllByNameIn(names);
     }
 }

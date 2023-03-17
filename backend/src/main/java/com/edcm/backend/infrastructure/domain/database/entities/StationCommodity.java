@@ -31,7 +31,7 @@ import java.util.Objects;
 public class StationCommodity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
 

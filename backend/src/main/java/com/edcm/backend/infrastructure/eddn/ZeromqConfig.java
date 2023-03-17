@@ -1,9 +1,9 @@
 package com.edcm.backend.infrastructure.eddn;
 
 import com.edcm.backend.core.properties.ZeromqProperties;
-import com.edcm.backend.core.scheduled.GithubInfoCheckService;
 import com.edcm.backend.core.services.ChannelWatcher;
 import com.edcm.backend.core.services.commodity.EddnStationCommoditiesService;
+import com.edcm.backend.core.services.journal.EddnJournalInformationService;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +38,15 @@ public class ZeromqConfig {
     public MessageHandler messageService(
             JsonMapper objectMapper,
             EddnStationCommoditiesService eddnStationCommoditiesService,
+            EddnJournalInformationService eddnJournalInformationService,
             ChannelWatcher channelWatcher
     ) {
 
-        return new ZeromqMessageHandler(objectMapper, eddnStationCommoditiesService, channelWatcher);
+        return new ZeromqMessageHandler(
+                eddnStationCommoditiesService,
+                eddnJournalInformationService,
+                objectMapper,
+                channelWatcher
+        );
     }
 }

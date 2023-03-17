@@ -10,5 +10,7 @@ import java.io.Serializable;
 @Data
 public class AllegianceDto implements Serializable {
     private final Long id;
+    private final String eddnId;
+    private final Long eddbId;
     private final String name;
 }
